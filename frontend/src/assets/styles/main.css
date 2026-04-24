@@ -1,0 +1,25 @@
+:root {
+  --color-link: #2b2b2b;
+  --color-line: #d8cfc8;
+  --color-darkBrown: #412310;
+  --color-background: #F2E9E4;
+  --color-white: #EFEBEB;
+}
+
+.button{
+    background-color: var(--color-darkBrown);
+    color: var(--color-white);
+}
+
+.curved {
+  border-radius: 10px;
+}
+
+a {
+  color: var(--color-link);
+}
+
+hr {
+  background-color: var(--color-line);
+  height: 1px;
+}
