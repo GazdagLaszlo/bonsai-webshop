@@ -22,7 +22,7 @@ namespace bonsai_webshop.Services
         Task<TokenResponseDTO> LoginAsync(UserLoginDTO userLoginDto, HttpResponse response);
         Task<TokenResponseDTO> RefreshTokenAsync(HttpRequest request, HttpResponse response);
         Task LogoutAsync(HttpRequest request, HttpResponse response);
-        Task<UserDTO> RegisterAsync(UserCreateDTO userCreateDto);
+        Task<TokenResponseDTO> RegisterAsync(UserCreateDTO userCreateDto, HttpResponse response);
     }
     public class UserService : IUserService
     {
@@ -150,7 +150,7 @@ namespace bonsai_webshop.Services
             return new ClaimsIdentity(claims, "Token");
         }
 
-        public async Task<UserDTO> RegisterAsync(UserCreateDTO userCreateDto)
+        public async Task<TokenResponseDTO> RegisterAsync(UserCreateDTO userCreateDto, HttpResponse response)
         {
             var emailAlreadyInUse = await _context.Users
                 .AnyAsync(x => x.Email == userCreateDto.Email);
@@ -160,12 +160,30 @@ namespace bonsai_webshop.Services
             }
 
             var user = _mapper.Map<User>(userCreateDto);
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreateDto.Password);            
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreateDto.Password);
 
             await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();            
 
+            var accessToken = await GenerateAccessToken(user);
+            var refreshToken = await GenerateRefreshToken(user);
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _context.SaveChangesAsync();
-            return _mapper.Map<UserDTO>(user);
+
+            response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+            
+            return new TokenResponseDTO
+            {
+                AccessToken = accessToken
+            };
         }
     }
 }

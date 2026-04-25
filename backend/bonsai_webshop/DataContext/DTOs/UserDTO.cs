@@ -23,10 +23,7 @@ namespace bonsai_webshop.DataContext.DTOs
     {
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
-        [Required]
-        [Phone]
-        public string Phone { get; set; }
+        public string Name { get; set; }        
         [Required]
         [EmailAddress]
         public string Email { get; set; }

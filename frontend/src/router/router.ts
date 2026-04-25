@@ -3,14 +3,12 @@ import Home from "../views/Home_view.vue";
 import Products from "../views/Products_view.vue";
 import Accessory from "../views/Accessory_view.vue";
 import AccessoriesCategory from "../views/Accessories_category.vue";
-
 import Indoor_Bonsai from "../views/Product_indoor_bonsai_view.vue";
-
 import Care from "../views/Care_view.vue";
 import About_Us from "../views/About_us_view.vue";
 import Contact from "../views/Contact_view.vue";
-
 import Cart from "../views/Cart_view.vue";
+import UserAuthentication from "../views/User_Authentication_view.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -35,6 +33,7 @@ const routes = [
   { path: "/about-us", name: "About-Us", component: About_Us },
   { path: "/contact", name: "Contact", component: Contact },
   { path: "/cart", name: "Cart", component: Cart },
+  { path: "/user-authentication", name: "UserAuth", component: UserAuthentication },
 ];
 
 const router = createRouter({

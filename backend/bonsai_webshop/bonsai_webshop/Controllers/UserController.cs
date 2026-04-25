@@ -60,10 +60,10 @@ namespace bonsai_webshop.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType<UserDTO>(StatusCodes.Status200OK)]
+        [ProducesResponseType<TokenResponseDTO>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] UserCreateDTO userCreateDto)
         {
-            var result = await _userService.RegisterAsync(userCreateDto);
+            var result = await _userService.RegisterAsync(userCreateDto, Response);
             return Ok(result);
         }
     }
