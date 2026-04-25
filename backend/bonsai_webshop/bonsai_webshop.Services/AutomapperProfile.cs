@@ -14,6 +14,9 @@ namespace bonsai_webshop.Services
             CreateMap<Order, OrderDTO>();
 
             CreateMap<ProductCategory, ProductCategoryDTO>();
+
+            CreateMap<UserCreateDTO, User>();
+            CreateMap<User, UserDTO>();
         }
     }
 }
