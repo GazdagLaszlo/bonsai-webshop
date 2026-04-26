@@ -23,6 +23,8 @@ namespace bonsai_webshop.Services
         Task<TokenResponseDTO> RefreshTokenAsync(HttpRequest request, HttpResponse response);
         Task LogoutAsync(HttpRequest request, HttpResponse response);
         Task<TokenResponseDTO> RegisterAsync(UserCreateDTO userCreateDto, HttpResponse response);
+        Task<UserDTO> UpdateOwnProfile(int userId, UserUpdateDTO dto);
+        Task ChangePassword(int userId, ChangePasswordDTO dto);
     }
     public class UserService : IUserService
     {
@@ -39,7 +41,7 @@ namespace bonsai_webshop.Services
                 .FirstOrDefaultAsync(x => x.Email == userLoginDto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(userLoginDto.Password, user.PasswordHash))
             {
-                throw new UnauthorizedAccessException("Invalid email or password!");
+                throw new UnauthorizedAccessException("Invalid email or password");
             }
 
             var accessToken = await GenerateAccessToken(user);
@@ -103,8 +105,8 @@ namespace bonsai_webshop.Services
 
             var id = await GetClaimsIdentity(user);
             var token = new JwtSecurityToken(
-                issuer: "https://localhost:7024",
-                audience: "https://localhost:7024",
+                issuer: "https://localhost:7226",
+                audience: "https://localhost:7226",
                 claims: id.Claims,
                 expires: expires,
                 signingCredentials: creds);
@@ -152,13 +154,15 @@ namespace bonsai_webshop.Services
 
         public async Task<TokenResponseDTO> RegisterAsync(UserCreateDTO userCreateDto, HttpResponse response)
         {
+            userCreateDto.Email = userCreateDto.Email.Trim().ToLower();
+
             var emailAlreadyInUse = await _context.Users
                 .AnyAsync(x => x.Email == userCreateDto.Email);
             if (emailAlreadyInUse)
             {
-                throw new Exception($"The given email address is already in use.");
+                throw new ArgumentException("Invalid credentials");
             }
-
+            
             var user = _mapper.Map<User>(userCreateDto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreateDto.Password);
 
@@ -184,6 +188,39 @@ namespace bonsai_webshop.Services
             {
                 AccessToken = accessToken
             };
+        }
+
+        public async Task ChangePassword(int userId, ChangePasswordDTO dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found with id");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash))
+            {
+                throw new InvalidOperationException("Old password is incorrect");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserDTO> UpdateOwnProfile(int userId, UserUpdateDTO dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found with id");
+            }
+
+            user.Name = dto.Name;
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<UserDTO>(user);
         }
     }
 }

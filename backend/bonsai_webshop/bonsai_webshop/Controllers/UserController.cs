@@ -3,6 +3,7 @@ using bonsai_webshop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace bonsai_webshop.Controllers
 {
@@ -12,7 +13,7 @@ namespace bonsai_webshop.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private int UserId => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        private string? userId => User.FindFirstValue(ClaimTypes.NameIdentifier);
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -32,6 +33,10 @@ namespace bonsai_webshop.Controllers
             {
                 return Unauthorized(new { message = ex.Message });
             }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
+            }
         }
 
         [HttpPost]
@@ -46,7 +51,11 @@ namespace bonsai_webshop.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return Unauthorized(new { message = "Invalid or expired refresh token." });
+                return Unauthorized(new { message = "Invalid or expired refresh token" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
             }
         }
 
@@ -54,17 +63,82 @@ namespace bonsai_webshop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
-            await _userService.LogoutAsync(Request, Response);
-            return Ok(new { message = "Logged out successfully." });
+            try
+            {
+                await _userService.LogoutAsync(Request, Response);
+                return Ok(new { message = "Logged out successfully" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
+            }
         }
 
+        [EnableRateLimiting("register")]
         [HttpPost]
-        [AllowAnonymous]
+        [AllowAnonymous]        
         [ProducesResponseType<TokenResponseDTO>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] UserCreateDTO userCreateDto)
         {
-            var result = await _userService.RegisterAsync(userCreateDto, Response);
-            return Ok(result);
+            try
+            {
+                var result = await _userService.RegisterAsync(userCreateDto, Response);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+        {            
+            if (userId == null)
+                return Unauthorized(new { message = "Unauthorized" });
+
+            try
+            {
+                await _userService.ChangePassword(int.Parse(userId), dto);
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<UserDTO>> UpdateOwnProfile([FromBody] UserUpdateDTO dto)
+        {
+            if (userId == null)
+                return Unauthorized(new { message = "Unauthorized" });
+
+            try
+            {
+                var result = await _userService.UpdateOwnProfile(int.Parse(userId), dto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Server error" });
+            }
         }
     }
 }

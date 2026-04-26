@@ -1,13 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using AutoMapper;
 using bonsai_webshop.DataContext.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using bonsai_webshop.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,15 @@ builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(AutomapperProfile));
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("register", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(15);
+    });
+});
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services
@@ -103,5 +113,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseRateLimiter();
 
 app.Run();

@@ -22,13 +22,15 @@ namespace bonsai_webshop.DataContext.DTOs
     public class UserCreateDTO
     {
         [Required]
-        [StringLength(50)]
+        [MaxLength(100)]
         public string Name { get; set; }        
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
-        [MinLength(8)]
+        [Required]        
+        [MinLength(8, ErrorMessage = "A jelszónak legalább 8 karakter hosszúnka kell lennie!")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$",
+        ErrorMessage = "A jelszónak tartalmaznia kell kis- és nagybetűt, valamint számot")]
         public string Password { get; set; }
     }
     public class UserLoginDTO
@@ -44,5 +46,16 @@ namespace bonsai_webshop.DataContext.DTOs
     public class TokenResponseDTO
     {
         public string AccessToken { get; set; }
+    }
+
+    public class UserUpdateDTO
+    {
+        public string? Name { get; set; }
+    }
+
+    public class ChangePasswordDTO
+    {
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
     }
 }

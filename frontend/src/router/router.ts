@@ -9,6 +9,7 @@ import About_Us from "../views/About_us_view.vue";
 import Contact from "../views/Contact_view.vue";
 import Cart from "../views/Cart_view.vue";
 import UserAuthentication from "../views/User_Authentication_view.vue";
+import Profile from "../views/Profile_view.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -34,6 +35,7 @@ const routes = [
   { path: "/contact", name: "Contact", component: Contact },
   { path: "/cart", name: "Cart", component: Cart },
   { path: "/user-authentication", name: "UserAuth", component: UserAuthentication },
+  { path: "/account", name: "Account", component: Profile },
 ];
 
 const router = createRouter({

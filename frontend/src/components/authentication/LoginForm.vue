@@ -47,11 +47,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToast } from 'vue-toastification';
-import { useRouter } from 'vue-router';
-import { UserLoginDTO } from 'generated-sources/openapi';
+import { ref, reactive } from "vue";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
+import { UserLoginDTO } from "generated-sources/openapi";
+import { translateError } from "@/utils/errorTranslator";
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -59,9 +60,14 @@ const router = useRouter();
 
 const loading = ref(false);
 const form = reactive({
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 });
+
+const resetForm = () => {
+  form.email = "";
+  form.password = "";
+};
 
 const handleLogin = async () => {
   loading.value = true;
@@ -75,12 +81,12 @@ const handleLogin = async () => {
 
     toast.success("Sikeres bejelentkezés!");
 
-    router.push('/');
-  } catch (error : any) {
-    const message = error.response?.data?.message || "Helytelen adatok!";
-    toast.error(message);
+    router.push("/");
+  } catch (error: any) {
+    toast.error(translateError(error));
   } finally {
     loading.value = false;
+    resetForm();
   }
 };
 </script>

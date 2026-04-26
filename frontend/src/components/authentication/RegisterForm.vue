@@ -84,6 +84,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "vue-toastification";
 import { UserCreateDTO } from "generated-sources/openapi";
 import { useRouter } from "vue-router";
+import { translateError } from "@/utils/errorTranslator";
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -113,7 +114,8 @@ const handleRegister = async () => {
     toast.error("A jelszónak legalább 8 karakter hosszúnak kell lennie!");
     return;
   }
-  if (!form.email.includes("@")) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
     toast.error("Helytelen email címet adott meg!");
     return;
   }
@@ -130,14 +132,12 @@ const handleRegister = async () => {
     await authStore.register(userCreateDTO);
     toast.success("Sikeres regisztráció!");
 
-    resetForm();
     router.push("/");
   } catch (error: any) {
-    toast.error(
-      error.response?.data?.message || "Hiba történt a regisztráció során!",
-    );
+    toast.error(translateError(error));
   } finally {
     loading.value = false;
+    resetForm();
   }
 };
 </script>

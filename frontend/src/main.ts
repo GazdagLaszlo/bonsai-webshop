@@ -7,10 +7,14 @@ import App from './App.vue';
 import router from './router/router';
 import 'bulma/css/bulma.min.css';
 import './assets/styles/main.css';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
+app.use(Toast);
 app.mount('#app');
