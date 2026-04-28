@@ -62,7 +62,7 @@ A vásárló böngészhet a termékek között, rendelést adhat le, kezelheti p
 
 ---
 
-##Projekt állapota
+## Projekt állapota
 A projekt jelenleg aktív fejlesztés alatt áll.
 
 ---
