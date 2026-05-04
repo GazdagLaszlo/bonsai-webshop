@@ -23,5 +23,14 @@ namespace bonsai_webshop.Controllers
             var result = await _productService.GetAllAsync(urlSlug);
             return Ok(result);
         }
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetByIdAsync(int id)
+        {
+            var result = await _productService.GetByIdAsync(id);
+            return Ok(result);
+        }
     }
 }

@@ -13,7 +13,7 @@ const errorMessages: Record<number, Record<string, string>> = {
 
   401: {
     "Invalid or expired refresh token": "Lejárt vagy érvénytelen munkamenet!",
-    "Unauthorized": "Nincs jogosultságod ehhez a művelethez!",
+    Unauthorized: "Nincs jogosultságod ehhez a művelethez!",
     "Invalid email or password": "Helytelen email cím vagy jelszó!",
     default: "Hozzáférés megtagadva!",
   },

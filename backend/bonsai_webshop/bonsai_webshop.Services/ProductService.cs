@@ -14,6 +14,7 @@ namespace bonsai_webshop.Services
     public interface IProductService
     {
         Task<ICollection<ProductDTO>> GetAllAsync(string? urlSlug = null);
+        Task<ProductDTO> GetByIdAsync(int id);
     }
     public class ProductService : IProductService
     {
@@ -27,7 +28,6 @@ namespace bonsai_webshop.Services
         }
         public async Task<ICollection<ProductDTO>> GetAllAsync(string? urlSlug = null)
         {            
-
             var query = _context.Products
                 .Include(p => p.ProductCategory)
                 .AsQueryable();
@@ -40,6 +40,18 @@ namespace bonsai_webshop.Services
 
             var products = await query.ToListAsync();
             return _mapper.Map<ICollection<ProductDTO>>(products);
+        }
+
+        public async Task<ProductDTO> GetByIdAsync(int id)
+        {
+            var product = await _context.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if(product == null)
+            {
+                throw new KeyNotFoundException("Product not found with id!");
+            }
+
+            return _mapper.Map<ProductDTO>(product);
         }
     }
 }

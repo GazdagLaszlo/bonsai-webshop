@@ -10,6 +10,7 @@ import Contact from "../views/Contact_view.vue";
 import Cart from "../views/Cart_view.vue";
 import UserAuthentication from "../views/User_Authentication_view.vue";
 import Profile from "../views/Profile_view.vue";
+import ProductView from "../views/Product_view.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -20,6 +21,11 @@ const routes = [
     component: Indoor_Bonsai,
   },
   {
+    path: "/products/indoor-bonsai-trees/:productId",
+    name: "ProductView",
+    component: ProductView,
+  },
+  {
     path: "/products/accessories",
     name: "Accessories",
     component: AccessoriesCategory,
@@ -28,6 +34,11 @@ const routes = [
     path: "/products/accessories/:category",
     name: "ProductCategory",
     component: Accessory,
+  },
+  {
+    path: "/products/accessories/:category/:productId",
+    name: "ProductItem",
+    component: ProductView,
   },
 
   { path: "/care", name: "Care", component: Care },

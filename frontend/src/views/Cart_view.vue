@@ -39,7 +39,7 @@
                 </ul>            
                 <p v-else>A kosár üres.</p>
             </div>
-            <div class="column box is-two-fifths p-6" :style="{height: fit-content, backgroundColor: COLORS.box}">
+            <div class="column box is-two-fifths p-6" :style="{height: 'fit-content', backgroundColor: COLORS.box}">
                 <p class="has-text-weight-bold is-size-5">Rendelés összegzése</p>
                 <hr>
                 <div class="is-flex is-flex-direction-row is-justify-content-space-between">
@@ -52,8 +52,7 @@
                 </div>
                 <hr>
                 <div class="is-flex is-flex-direction-row is-justify-content-space-between">
-                    <p class="has-text-weight-bold is-size-5">Végösszeg</p>
-                    <!--Mivel a totalPrice computed változó, kellene a .value az értéke lekéréséhez, de a Vue 3 automatikusan kinyeri a template-ben-->
+                    <p class="has-text-weight-bold is-size-5">Végösszeg</p>                    
                     <p class="has-text-weight-bold is-size-5">{{ moneyFormat(cartStore.totalPrice) }} Ft</p>
                 </div>
                 <button class="button go-to-cart-button mt-6 is-fullwidth" v-if="cartStore.items.length > 0" @click="sendCartToServer">
@@ -66,12 +65,11 @@
 </template>
 
 <script setup>      
-    import formatting from '@/utils/main_Utils.js';
+    import {moneyFormat} from '@/utils/moneyFormat';
     import { useCartStore } from '@/stores/useCartStore';
     import COLORS from '@/constants/colors';
 
-    const cartStore = useCartStore();
-    const { moneyFormat } = formatting;
+    const cartStore = useCartStore();    
 
 </script>
 

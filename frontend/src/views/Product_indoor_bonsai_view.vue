@@ -36,7 +36,7 @@
     </div>
     <hr class="line mb-1" />
     <p class="is-size-6 mb-4">
-      Bővebb tájékoztatásért válasszon az alábbi kategóriák közül!
+      Bővebb információért válasszon termékeink közül!
     </p>
     <!----------------------->
     <div class="columns is-multiline mt-6 is-tablet is-flex-wrap-wrap">
@@ -45,21 +45,23 @@
         v-for="product in products"
         :key="product.id"
       >
-        <div class="">
-          <p class="has-text-weight-semibold">{{ product.name }}</p>
-          <hr class="line mb-3 mt-1" />
-        </div>
-        <div class="card-image">
-          <figure class="image is-5by4">
-            <img :src="product.image ?? ''" />
-          </figure>
-        </div>
+        <router-link :to="`/products/indoor-bonsai-trees/${product.id}`">
+          <div class="">
+            <p class="has-text-weight-semibold">{{ product.name }}</p>
+            <hr class="line mb-3 mt-1" />
+          </div>
+          <div class="card-image">
+            <figure class="image is-5by4">
+              <img :src="product.image ?? ''" />
+            </figure>
+          </div>
+        </router-link>
         <div
           class="mt-5 is-flex is-flex-direction-column is-align-items-center"
         >
           <p class="mb-3 has-text-weight-semibold">{{ product.price }} Ft</p>
           <button
-            @click="cartStore.addToCart(product)"
+            @click="handleAddToCart(product)"
             class="button is-normal is-fullwidth"
           >
             Kosárba
@@ -76,14 +78,14 @@ import { ProductDTO } from "generated-sources/openapi";
 import { ref, onMounted } from "vue";
 import { useCartStore } from "@/stores/useCartStore";
 import { useRoute } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 const cartStore = useCartStore();
+const toast = useToast();
 
 const products = ref<ProductDTO[]>([]);
 const isLoading = ref(false);
-
-console.log(route);
 
 async function getProducts() {
   isLoading.value = true;
@@ -99,10 +101,17 @@ async function getProducts() {
 }
 
 onMounted(getProducts);
+
+const handleAddToCart = (product: ProductDTO) => {
+  cartStore.addToCart(product, 1);
+  toast.success(`Kosárba helyezve!`, {
+    timeout: 2000,
+  });
+};
 </script>
 
 <style scoped>
-.image img {  
+.image img {
   border-radius: 10px;
 }
 </style>

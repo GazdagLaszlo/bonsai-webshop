@@ -30,7 +30,7 @@
     </div>
     <hr class="line mb-1" />
     <p class="is-size-6 mb-4">
-      Bővebb tájékoztatásért válasszon az alábbi kategóriák közül!
+      Bővebb információért válasszon termékeink közül!  
     </p>
     <!----------------------->
     <div class="columns is-multiline mt-6 is-tablet is-flex-wrap-wrap">
@@ -39,21 +39,23 @@
         v-for="product in products"
         :key="product.id"
       >
-        <div class="">
-          <p class="has-text-weight-semibold">{{ product.name }}</p>
-          <hr class="line mb-3 mt-1" />
-        </div>
-        <div class="card-image">
-          <figure class="image is-5by4">
-            <img :src="product.image ?? ''" />
-          </figure>
-        </div>
+        <router-link :to="{name: 'ProductItem', params: {category: product.category?.urlSlug, productId: product.id}}">
+          <div class="">
+            <p class="has-text-weight-semibold">{{ product.name }}</p>
+            <hr class="line mb-3 mt-1" />
+          </div>
+          <div class="card-image">
+            <figure class="image is-5by4">
+              <img :src="product.image ?? ''" />
+            </figure>
+          </div>
+        </router-link>
         <div
           class="mt-5 is-flex is-flex-direction-column is-align-items-center"
         >
           <p class="mb-3 has-text-weight-semibold">{{ product.price }} Ft</p>
           <button
-            @click="cartStore.addToCart(product)"
+            @click="cartStore.addToCart(product, 1)"
             class="button is-normal is-fullwidth"
           >
             Kosárba
@@ -67,7 +69,7 @@
 <script setup lang="ts">
 import api from "@/api/api";
 import { ProductCategoryDTO, ProductDTO } from "generated-sources/openapi";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/useCartStore";
 
@@ -109,11 +111,21 @@ async function getCategory() {
 
 onMounted(getProducts);
 onMounted(getCategory);
+
+watch(
+  () => route.params.category,
+  (newUrlSlug) => {
+    if (newUrlSlug) {
+      getProducts();
+      getCategory();
+    }
+  },
+);
 </script>
 
 <style scoped>
-.image img{
-    object-fit: cover;
-    border-radius: 10px;
+.image img {
+  object-fit: cover;
+  border-radius: 10px;
 }
 </style>
