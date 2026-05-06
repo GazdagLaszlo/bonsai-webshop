@@ -44,7 +44,10 @@ namespace bonsai_webshop.Services
 
         public async Task<ProductDTO> GetByIdAsync(int id)
         {
-            var product = await _context.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var product = await _context.Products
+                .Where(x => x.Id == id)
+                .Include(x => x.ProductCategory)
+                .FirstOrDefaultAsync();
 
             if(product == null)
             {

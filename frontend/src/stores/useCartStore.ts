@@ -8,7 +8,7 @@ type cartItem = ProductDTO & {
 
 export const useCartStore = defineStore('cart', () => {
     const items = ref<cartItem[]>([]);
-    const isOpen = ref<boolean>(false);
+    const isOpen = ref<boolean>(false);    
 
     const totalItems = computed(() => items.value.length);
 

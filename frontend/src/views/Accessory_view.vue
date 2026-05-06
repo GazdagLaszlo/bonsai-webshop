@@ -39,7 +39,7 @@
         v-for="product in products"
         :key="product.id"
       >
-        <router-link :to="{name: 'ProductItem', params: {category: product.category?.urlSlug, productId: product.id}}">
+        <router-link :to="{name: 'ProductView', params: {category: product.category?.urlSlug, productId: product.id}}">
           <div class="">
             <p class="has-text-weight-semibold">{{ product.name }}</p>
             <hr class="line mb-3 mt-1" />

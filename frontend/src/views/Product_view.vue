@@ -8,37 +8,31 @@
           </figure>
         </div>
 
-        <div class="column is-half" >
+        <div class="column is-half">
           <h1 class="title">{{ product.name }}</h1>
 
           <p class="is-size-4 has-text-weight-semibold mb-4">
             {{ moneyFormat(product.price) }} Ft
           </p>
 
-          <div class="content">
+          <div class="content" style="text-align: justify">
             <p>{{ product.description }}</p>
           </div>
 
-          <div
-            class="is-flex is-flex-direction-row is-align-items-space-between"
-          >
-            <div class="column is-flex is-flex-direction-row">
-              <button
-                @click="decreaseQuantity"
-                class="button quantity-setter-button is-size-7"
-              >
-                -
-              </button>
-              <p class="has-text-weight-semibold mx-4 py-1">
-                {{ quantity }} db
-              </p>
-              <button
-                @click="increaseQuantity"
-                class="button quantity-setter-button is-size-7"
-              >
-                +
-              </button>
-            </div>
+          <div class="column is-flex is-flex-direction-row">
+            <button
+              @click="decreaseQuantity"
+              class="button quantity-setter-button is-size-7"
+            >
+              -
+            </button>
+            <p class="has-text-weight-semibold mx-4 py-1">{{ quantity }} db</p>
+            <button
+              @click="increaseQuantity"
+              class="button quantity-setter-button is-size-7"
+            >
+              +
+            </button>
           </div>
           <button
             class="button is-dark is-fullwidth mt-4"

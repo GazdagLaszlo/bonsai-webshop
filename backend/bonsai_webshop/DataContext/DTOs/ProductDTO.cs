@@ -15,6 +15,6 @@ namespace bonsai_webshop.DataContext.DTOs
         public string Image { get; set; }
         public decimal Price { get; set; }       
         public string UrlSlug { get; set; }
-        public ProductCategory Category { get; set; }
+        public ProductCategoryDTO ProductCategory { get; set; }
     }
 }
