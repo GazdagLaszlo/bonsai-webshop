@@ -2,8 +2,7 @@
   <div class="my-6">
     <div class="mt-6">
       <hr class="mb-1" />
-      <router-link to="/products"
-        ><a class="is-size-6">Termékeink /</a></router-link
+      <router-link to="/products" class="is-size-6">Termékeink /</router-link
       ><span class="has-text-weight-semibold"> Beltéri bonsai fák</span>
       <hr class="mb-1 mt-2" />
     </div>
@@ -45,7 +44,14 @@
         v-for="product in products"
         :key="product.id"
       >
-        <router-link :to="`/products/indoor-bonsai-trees/${product.id}`">
+        <router-link
+          :to="{
+            name: 'IndoorBonsaiProductView',
+            params: {
+              productId: product.id,
+            },
+          }"
+        >
           <div class="">
             <p class="has-text-weight-semibold">{{ product.name }}</p>
             <hr class="line mb-3 mt-1" />

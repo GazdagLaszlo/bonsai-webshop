@@ -11,7 +11,7 @@
             <div class="columns cart-item mb-5 is-flex is-flex-direction-row">
               <router-link
                 :to="{
-                  name: 'ProductView',
+                  name: item.productCategory.urlSlug == 'indoor-bonsai-trees' ? 'IndoorBonsaiProductView' : 'AccessoriesProductView',
                   params: {
                     productId: item.id,
                     category: item.productCategory.urlSlug,
@@ -31,7 +31,7 @@
                 >                  
                     <router-link
                       :to="{
-                        name: 'ProductView',
+                        name: item.productCategory.urlSlug == 'indoor-bonsai-trees' ? 'IndoorBonsaiProductView' : 'AccessoriesProductView',
                         params: {
                           productId: item.id,
                           category: item.productCategory.urlSlug,

@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: "/products/indoor-bonsai-trees/:productId",
-    name: "ProductView",
+    name: "IndoorBonsaiProductView",
     component: ProductView,
   },
   {
@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: "/products/accessories/:category/:productId",
-    name: "ProductView",
+    name: "AccessoriesProductView",
     component: ProductView,
   },
 

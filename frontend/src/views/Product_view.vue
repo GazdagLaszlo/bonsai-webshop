@@ -91,5 +91,6 @@ const decreaseQuantity = () => {
 <style scoped>
 .image img {
   border-radius: 10px;
+  object-fit: contain;
 }
 </style>

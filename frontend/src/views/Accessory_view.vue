@@ -2,8 +2,7 @@
   <div class="my-6">
     <div class="mt-6">
       <hr class="mb-1" />
-      <router-link to="/products"
-        ><a class="is-size-6">Termékeink /</a></router-link
+      <router-link to="/products" class="is-size-6">Termékeink /</router-link
       ><router-link to="/products/accessories"
         ><a class="is-size-6"> Kellékek / </a></router-link
       ><span class="has-text-weight-semibold">{{ category?.name }}</span>
@@ -30,7 +29,7 @@
     </div>
     <hr class="line mb-1" />
     <p class="is-size-6 mb-4">
-      Bővebb információért válasszon termékeink közül!  
+      Bővebb információért válasszon termékeink közül!
     </p>
     <!----------------------->
     <div class="columns is-multiline mt-6 is-tablet is-flex-wrap-wrap">
@@ -39,7 +38,15 @@
         v-for="product in products"
         :key="product.id"
       >
-        <router-link :to="{name: 'ProductView', params: {category: product.category?.urlSlug, productId: product.id}}">
+        <router-link
+          :to="{
+            name: 'AccessoriesProductView',
+            params: {
+              category: product.category?.urlSlug,
+              productId: product.id,
+            },
+          }"
+        >
           <div class="">
             <p class="has-text-weight-semibold">{{ product.name }}</p>
             <hr class="line mb-3 mt-1" />
